@@ -229,8 +229,8 @@ function TripPlanner(){
   const togS2At=i=>setS2At(p=>p.includes(i)?p.filter(x=>x!==i):[...p,i]);
   const surprise=()=>{const pool=filtered.length?filtered:D;const rd=pool[Math.floor(Math.random()*pool.length)];const pr=PRESETS[Math.floor(Math.random()*PRESETS.length)];const best=rd.trn<999?"train":rd.fx?"flixbus":rd.fl?"flight":rd.car<900?"car":null;if(!best)return;const fl=best==="flight"?rd.fl.ap[0]:null;const tm=best==="train"?rd.trn:best==="car"?rd.car:best==="flixbus"?rd.fx.min:fl?(fl.min+120):0;const rN=tm>300?2:tm>180?1:0;setSelId(rd.id);setTr(best);setSelFl(fl);setMeal(pr.ml);setWantWell(pr.well);setNights(Math.max(pr.nts,rN));setSelAt([]);setWantLoc(false);setStep(4);setCopied(false);resetS2();};
 
-  const doExport=useCallback(()=>{
-    if(!dest||!costs)return;
+  const buildText=useCallback(()=>{
+    if(!dest||!costs)return"";
     const ln=[`🗺️ ${multi?`Multi-stop: ${dest.nm} → ${stop2.nm}`:`Trip: ${dest.nm}`} • ${totalDays}d/${totalNt}nt`,`👥 ${people} person${people>1?"s":""}`,``,
       `🚃 ${transport==="train"?`Train tickets ~${fE(costs.trnC)}${dest.trp?` (€${dest.trp[0]}–${dest.trp[1]} one-way)`:""}`:transport==="car"?`Car ~${fE(costs.fuel)} (${costs.routeKm}km${multi?" total route":""})`:transport==="flight"?`${selFl.cd} ${selFl.al} (~${fE(costs.flC)})`:transport==="flixbus"?`FlixBus (~${fE(costs.fxC)})`:""}`];
     if(transport==="car"&&costs.toll>0)ln.push(`  Tolls: ${fE(costs.toll)} • Parking: ${fE(costs.park)}`);
@@ -249,8 +249,20 @@ function TripPlanner(){
     if(multi){const c2=NE[stop2.co];if(c2&&c2.c!==(cur?.c))ln.push(`💱 ${c2.c} (${c2.r})`);}
     ln.push(``,`📋 ${dest.nm}:`,`☀️ ${dest.it.am}`,`🌤️ ${dest.it.pm}`,`🌙 ${dest.it.ev}`);
     if(multi)ln.push(``,`📋 ${stop2.nm}:`,`☀️ ${stop2.it.am}`,`🌤️ ${stop2.it.pm}`,`🌙 ${stop2.it.ev}`);
-    navigator.clipboard.writeText(ln.join("\n")).then(()=>{setCopied(true);setTimeout(()=>setCopied(false),2000);}).catch(()=>{});
+    return ln.join("\n");
   },[dest,costs,transport,selFl,nights,wantWell,meal,people,totalDays,totalNt,selAt,wantLoc,multi,stop2,s2Nt,s2Well,s2At,s2Loc,interKm,interMin]);
+
+  const doExport=useCallback(()=>{
+    const txt=buildText();if(!txt)return;
+    navigator.clipboard.writeText(txt).then(()=>{setCopied(true);setTimeout(()=>setCopied(false),2000);}).catch(()=>{});
+  },[buildText]);
+
+  const doTelegram=useCallback(()=>{
+    const txt=buildText();if(!txt)return;
+    const appUrl="https://rizabalci.github.io/vienna-trip-planner/";
+    const url=`https://t.me/share/url?url=${encodeURIComponent(appUrl)}&text=${encodeURIComponent(txt)}`;
+    window.open(url,"_blank");
+  },[buildText]);
 
   const bs={cursor:"pointer",textAlign:"left",color:t.tx,transition:"all 0.15s"};
 
@@ -626,6 +638,7 @@ function TripPlanner(){
                 </div>
                 <div style={{display:"flex",justifyContent:"center",gap:12}}>
                   <button onClick={doExport} style={{background:copied?t.tb:t.cd,border:`1px solid ${copied?t.tl:t.cb}`,borderRadius:14,padding:"11px 16px",color:copied?t.tl:t.tm,cursor:"pointer",fontSize:19,fontWeight:600,transition:"all 0.3s"}}>{copied?"✓ Copied!":"📋 Export"}</button>
+                  <button onClick={doTelegram} style={{background:`${t.bl}12`,border:`1px solid ${t.bl}40`,borderRadius:14,padding:"11px 16px",color:t.bl,cursor:"pointer",fontSize:19,fontWeight:600}}>✈️ Telegram</button>
                   <button onClick={reset} style={{background:t.cd,border:`1px solid ${t.cb}`,borderRadius:14,padding:"11px 16px",color:t.tm,cursor:"pointer",fontSize:19,fontWeight:600}}>🗺️ New Trip</button>
                 </div>
               </div>
