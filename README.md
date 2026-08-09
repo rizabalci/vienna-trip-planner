@@ -1,13 +1,13 @@
 # Vienna Trip Planner ✈️
 
-A single-file trip planning web app for exploring day trips and short getaways from Vienna. Covers 75 destinations across 29 countries in two scopes: a Near Vienna tier of 61 regional trips, and an All Europe tier of 14 flight-weekend capitals. Real cost estimates across four transport modes.
+A single-file trip planning web app for exploring day trips and short getaways from Vienna. Covers 81 destinations across 32 countries in two scopes: a Near Vienna tier of 61 regional trips, and an All Europe tier of 20 flight-weekend cities. Real cost estimates across four transport modes.
 
 **Live demo:** https://rizabalci.github.io/vienna-trip-planner/
 
 ## Features
 
-- 75 destinations across 29 countries, from Austria and its neighbours out to Portugal, Ireland, Sweden, and Turkey
-- Dual-scope browser: Near Vienna (61 regional trips) or All Europe (14 flight-weekend capitals)
+- 81 destinations across 32 countries, from Austria and its neighbours out to Iceland, Portugal, and Turkey
+- Dual-scope browser: Near Vienna (61 regional trips) or All Europe (20 flight-weekend cities)
 - 4 transport modes with live cost calculation: Train (OBB ticket pricing), Car (fuel + parking + tolls), FlixBus, and budget Flights (Ryanair/Wizzair with Bratislava alternatives)
 - Multi-stop trips that chain two destinations using haversine distance estimates
 - Budget presets (Backpacker / Mid-range / Comfort) for one-tap planning
@@ -17,7 +17,7 @@ A single-file trip planning web app for exploring day trips and short getaways f
 - Animated trip timeline showing the full journey
 - Compare mode for up to 3 destinations side-by-side
 - Search, filter, and sort by category, distance, price, or speed
-- Currency warnings for non-Euro destinations (13 currencies from HUF and CZK to GBP, SEK, and CHF)
+- Currency warnings for non-Euro destinations (15 currencies from HUF and CZK to GBP, NOK, and ISK)
 - Export to clipboard for sharing or saving a plan
 - Dark / light theme toggle
 - Mobile-optimized with Add to Home Screen support
